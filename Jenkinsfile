@@ -4,10 +4,10 @@ pipeline{
 
       stages{
 
-        stage("git checkout"){
+        stage('git checkout'){
 
             steps{
-                git branch: 'master', url: git 'https://github.com/Prabhakar988/Prabhakar_Git.git'
+                git branch: 'master', url: 'https://github.com/Prabhakar988/Prabhakar_Git.git'
             }
         }
       }
