@@ -1,0 +1,74 @@
+pipeline{
+
+    agent any
+
+    parameters{
+
+        choice(name: 'action', choices: 'create\ndestroy', description: 'actions performed')
+        string(name: 'cluster', defaultValue: 'demo-cluster', description: 'EKS ckuster name')
+        string(name: 'region', defaultValue: 'us-east-1', description: 'region name')
+    }
+
+    environments{
+        ACCESS_KEY: credentials('Access_key_id')
+        SECRET_KEY: credentials('Access_secret_id')  //similar way configured in jenkins ..
+
+    }
+    stages{
+
+        stage('git checkout'){
+
+            steps{
+
+            
+            }
+        }
+
+       stage('eks connect'){
+             steps{
+
+            sh """
+                aws configure set Access_key_id "$ACCESS_KEY"
+                aws configure set Access_secret_id "$SECRET_KEY"
+                aws configure set Access_region ""
+                aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
+               """;
+
+
+          }
+        }
+       stage('eks deployment'){
+         when { expression { params.action == 'create'}}
+         steps{
+       
+           script{
+            
+             define apply=false
+              try{
+                 input message: 'do u want to proceed', ok 'please confirm on deployment'
+                 apply = true
+              }
+              catch(err){
+                 apply = false
+                 CurrentBuild.result = 'unstable'
+
+              }
+              if(apply)
+
+               sh """
+
+               kubectl apply -f
+
+                 """;
+            
+              
+           }
+
+            
+
+         
+
+        }
+      } 
+    }
+}

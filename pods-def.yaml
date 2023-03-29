@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+    name: my-app
+    labels:
+      type: front-end
+
+spec:
+  - containers:
+      -name: webserver
+       image: nginx2.1
+       imagepullpolicy: always
+       ports:
+         - containerPort: 80
+        
+        
+       
+    
+               
